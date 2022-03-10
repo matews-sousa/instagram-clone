@@ -1,15 +1,18 @@
 import type { NextPage } from "next";
 import Layout from "../components/Layout";
+import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 
 const Home: NextPage = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <Layout>
-      {currentUser?.email}
-      {currentUser?.username}
-      <button onClick={logout}>Logout</button>
+      <Navbar />
+      <div>
+        {currentUser?.email}
+        {currentUser?.username}
+      </div>
     </Layout>
   );
 };
