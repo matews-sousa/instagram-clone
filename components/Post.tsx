@@ -6,23 +6,31 @@ import {
 import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import IPost, { PostDoc } from "../types/Post";
+import { Author, PostDoc } from "../types/Post";
 import { db } from "../utils/firebase";
 import { useAuth } from "../context/AuthContext";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Avatar from "./Avatar";
+
+dayjs.extend(relativeTime);
 
 interface PostProps {
   postDoc: PostDoc;
 }
 
 const Post = ({ postDoc }: PostProps) => {
-  const [post, setPost] = useState<IPost>();
+  const [post, setPost] = useState<PostDoc>(postDoc);
+  const [author, setAuthor] = useState<Author>();
+  const [showMore, setShowMore] = useState(false);
   const { currentUser } = useAuth();
+  const date = post?.createdAt.toDate();
 
   const toggleLike = async () => {
     if (currentUser && post) {
       const postRef = doc(db, "posts", postDoc.id);
       setPost(() => {
-        let newLikes = [];
+        let newLikes: string[] = [];
         if (post?.likes.includes(currentUser.uid))
           newLikes = post.likes?.filter((like) => like !== currentUser.uid);
         else newLikes = [...post.likes, currentUser.uid];
@@ -37,31 +45,37 @@ const Post = ({ postDoc }: PostProps) => {
     }
   };
 
-  const fetchPostData = async () => {
+  const fetchAuthorData = async () => {
     const authorRef = doc(db, "users", postDoc.authorId);
     const authorDocSnap = await getDoc(authorRef);
     const authorData = authorDocSnap.data();
 
-    const finalPost = {
-      ...postDoc,
+    const finalAuthor = {
       username: authorData?.username,
-      name: authorData?.name,
+      displayName: authorData?.displayName,
       photoURL: authorData?.photoURL,
-      email: authorData?.email,
     };
-    setPost(finalPost);
+    setAuthor(finalAuthor);
   };
 
   useEffect(() => {
-    fetchPostData();
+    fetchAuthorData();
   }, [postDoc]);
+
+  if (!post) {
+    return <div>Nothing here</div>;
+  }
 
   return (
     <div className="max-w-md border border-gray-300">
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center space-x-4">
-          <img src={post?.photoURL} className="h-10 w-10 rounded-full" />
-          <p className="font-semibold">{post?.username}</p>
+          <Avatar
+            photoURL={author?.photoURL}
+            displayName={author?.displayName}
+            size={10}
+          />
+          <p className="font-semibold">{author?.username}</p>
         </div>
         <button>
           <DotsHorizontalIcon className="w-6 text-black" />
@@ -86,6 +100,27 @@ const Post = ({ postDoc }: PostProps) => {
         </div>
         <div>
           <p className="font-semibold">{post?.likes.length} likes</p>
+          <div className="flex">
+            <p className="w-[90%] whitespace-pre-wrap">
+              <span className="mr-2 font-semibold">{author?.username}</span>
+              {post?.caption.slice(
+                0,
+                !showMore ? 50 : post?.caption.length + 1,
+              )}
+              {post?.caption.length >= 50 && !showMore && "..."}
+            </p>
+            {post?.caption.length >= 50 && !showMore && (
+              <button
+                className="text-sm text-gray-500"
+                onClick={() => setShowMore(true)}
+              >
+                more
+              </button>
+            )}
+          </div>
+          <p className="mt-2 text-sm uppercase text-gray-500">
+            {dayjs(date).fromNow()}
+          </p>
         </div>
       </div>
     </div>

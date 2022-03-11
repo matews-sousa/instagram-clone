@@ -1,8 +1,9 @@
-export default interface IPost extends PostDoc {
-  email: string;
-  photoURL: string;
+import { Timestamp } from "firebase/firestore";
+
+export interface Author {
+  photoURL?: string;
   username: string;
-  name: string;
+  displayName: string;
 }
 
 export interface PostDoc {
@@ -11,4 +12,5 @@ export interface PostDoc {
   imageUrl: string;
   caption: string;
   likes: string[];
+  createdAt: Timestamp;
 }

@@ -3,24 +3,20 @@ import { UserCircleIcon } from "@heroicons/react/outline";
 import { LogoutIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import Avatar from "./Avatar";
 
 const ProfileDropdown = () => {
   const { currentUser, logout } = useAuth();
 
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className="relative grid place-content-center">
       {({ open }) => (
         <>
-          <Menu.Button>
-            {currentUser?.photoURL ? (
-              <div className="h-8 w-8">
-                <img src={currentUser.photoURL} className="w-full" />
-              </div>
-            ) : (
-              <div className="grid h-8 w-8 place-items-center rounded-full bg-teal-300">
-                {currentUser?.username?.charAt(0).toUpperCase()}
-              </div>
-            )}
+          <Menu.Button className="h-8 w-8">
+            <Avatar
+              photoURL={currentUser?.photoURL}
+              displayName={currentUser?.displayName}
+            />
           </Menu.Button>
 
           <Transition

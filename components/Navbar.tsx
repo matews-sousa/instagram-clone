@@ -13,9 +13,12 @@ import {
 } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";
+import { useState } from "react";
+import CreatePostModal from "./CreatePostModal";
 
 const Navbar = () => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <div className="fixed inset-x-0 top-0 border-b border-gray-300 bg-white py-4">
@@ -35,7 +38,7 @@ const Navbar = () => {
         <nav>
           <ul className="flex items-center space-x-4">
             {navLinks.map((link) => (
-              <li>
+              <li key={link.url}>
                 <Link href={link.url}>
                   <a>
                     {router.pathname === link.url ? link.iconActive : link.icon}
@@ -43,12 +46,16 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+            <li className="cursor-pointer" onClick={() => setIsOpen(true)}>
+              <PlusCircleOutline className="h-7 w-7" />
+            </li>
             <li>
               <ProfileDropdown />
             </li>
           </ul>
         </nav>
       </div>
+      <CreatePostModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };
@@ -61,23 +68,5 @@ const navLinks = [
     name: "Home",
     iconActive: <HomeIcon className="h-7 w-7 text-black" />,
     icon: <HomeOutline className="h-7 w-7 text-black" />,
-  },
-  {
-    url: "/chat",
-    name: "Home",
-    iconActive: <ChatIcon className="h-7 w-7 text-black" />,
-    icon: <ChatOutline className="h-7 w-7 text-black" />,
-  },
-  {
-    url: "/add",
-    name: "Home",
-    iconActive: <PlusCircleIcon className="h-7 w-7 text-black" />,
-    icon: <PlusCircleOutline className="h-7 w-7 text-black" />,
-  },
-  {
-    url: "/heart",
-    name: "Home",
-    iconActive: <HeartIcon className="h-7 w-7 text-black" />,
-    icon: <HeartOutline className="h-7 w-7 text-black" />,
   },
 ];

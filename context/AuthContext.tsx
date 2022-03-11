@@ -12,25 +12,24 @@ import {
   signOut,
   onAuthStateChanged,
   User,
+  updateProfile,
 } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 interface IUser extends User {
   username?: string;
+  photoURL: string | null;
 }
 
 interface IAuth {
   currentUser: IUser | null;
   signIn: (email: string, password: string) => any;
-  signUp: (username: string, email: string, password: string) => any;
+  signUp: (
+    displayName: string,
+    username: string,
+    email: string,
+    password: string,
+  ) => any;
   logout: () => void;
 }
 
@@ -48,23 +47,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const signUp = async (username: string, email: string, password: string) => {
+  const signUp = async (
+    displayName: string,
+    username: string,
+    email: string,
+    password: string,
+  ) => {
     const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
       password,
     );
     const userRef = doc(db, "users", user.uid);
-    const userData = await setDoc(userRef, {
-      username: username,
-    });
-    console.log(userData);
-    setCurrentUser({
-      ...user,
-      username: username,
-    });
 
-    return currentUser;
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, {
+        displayName: displayName,
+      });
+      await setDoc(userRef, {
+        username: username,
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+      });
+    }
   };
 
   const logout = () => {
@@ -80,7 +85,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setCurrentUser({
           ...user,
-          ...data,
+          username: data?.username,
+          photoURL: data?.photoURL,
         });
       } else {
         setCurrentUser(null);

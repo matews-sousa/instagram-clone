@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 type FormInputs = {
   email: string;
+  name: string;
   username: string;
   password: string;
 };
@@ -20,6 +21,7 @@ const schema = yup.object({
     .string()
     .email("Must be a valid email.")
     .required("Email is a required field."),
+  name: yup.string().required("Name is a required field."),
   username: yup
     .string()
     .test("in-use", "Username already in use.", async (value) => {
@@ -56,7 +58,7 @@ const SignUp = () => {
 
   const onSubmit = async (data: FormInputs) => {
     try {
-      await signUp(data.username, data.email, data.password);
+      await signUp(data.name, data.username, data.email, data.password);
       router.push("/");
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
@@ -84,6 +86,12 @@ const SignUp = () => {
               name="email"
               register={register}
               error={errors.email?.message || errorMessage}
+            />
+            <InputField
+              label="Name"
+              name="name"
+              register={register}
+              error={errors.name?.message}
             />
             <InputField
               label="Username"
