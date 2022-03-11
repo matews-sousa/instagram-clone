@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthContext";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Avatar from "./Avatar";
+import EmojiPicker from "./EmojiPicker";
 
 dayjs.extend(relativeTime);
 
@@ -23,8 +24,13 @@ const Post = ({ postDoc }: PostProps) => {
   const [post, setPost] = useState<PostDoc>(postDoc);
   const [author, setAuthor] = useState<Author>();
   const [showMore, setShowMore] = useState(false);
+  const [comment, setComment] = useState("");
   const { currentUser } = useAuth();
   const date = post?.createdAt.toDate();
+
+  const onEmojiClick = (event: any) => {
+    setComment(comment + event.native);
+  };
 
   const toggleLike = async () => {
     if (currentUser && post) {
@@ -40,6 +46,29 @@ const Post = ({ postDoc }: PostProps) => {
           likes: newLikes,
         };
         setDoc(postRef, postUpdated);
+        return postUpdated;
+      });
+    }
+  };
+
+  const addComment = async () => {
+    if (currentUser && post && comment) {
+      const postRef = doc(db, "posts", postDoc.id);
+      setPost(() => {
+        const newComments = [
+          ...post.comments,
+          {
+            commentUsername: currentUser.username,
+            content: comment,
+          },
+        ];
+
+        const postUpdated = {
+          ...post,
+          comments: newComments,
+        };
+        setDoc(postRef, postUpdated);
+        setComment("");
         return postUpdated;
       });
     }
@@ -118,10 +147,29 @@ const Post = ({ postDoc }: PostProps) => {
               </button>
             )}
           </div>
-          <p className="mt-2 text-sm uppercase text-gray-500">
+          <button className="my-2 text-sm text-gray-600 hover:text-gray-500">
+            View all {post?.comments.length} comments
+          </button>
+          <p className="text-xs uppercase text-gray-500">
             {dayjs(date).fromNow()}
           </p>
         </div>
+      </div>
+      <div className="mt-2 flex items-center space-x-2 border-t border-gray-300 p-1">
+        <EmojiPicker onEmojiClick={onEmojiClick} />
+        <input
+          type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Add a comment..."
+          className="w-[80%] p-2 focus:outline-none"
+        />
+        <button
+          className="text-sm font-semibold text-blue-600 hover:text-blue-500"
+          onClick={addComment}
+        >
+          Send
+        </button>
       </div>
     </div>
   );

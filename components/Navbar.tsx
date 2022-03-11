@@ -21,7 +21,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="fixed inset-x-0 top-0 border-b border-gray-300 bg-white py-4">
+    <div className="fixed inset-x-0 top-0 z-10 border-b border-gray-300 bg-white py-4">
       <div className="mx-auto flex max-w-xl items-center justify-between px-4 md:max-w-3xl lg:max-w-4xl">
         <Link href="/">
           <a>

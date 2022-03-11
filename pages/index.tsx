@@ -14,10 +14,10 @@ const Home: NextPage = () => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       const currentPosts: PostDoc[] = [];
-      querySnapshot.forEach(async (document) => {
-        const postData: Partial<Omit<PostDoc, "id">> = document.data();
+      querySnapshot.forEach(async (doc) => {
+        const postData: Partial<Omit<PostDoc, "id">> = doc.data();
         currentPosts.push({
-          id: document.id,
+          id: doc.id,
           ...postData,
         });
       });
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Navbar />
-      <div>
+      <div className="space-y-6">
         {posts.map((post) => (
           <Post postDoc={post} key={post.id} />
         ))}
