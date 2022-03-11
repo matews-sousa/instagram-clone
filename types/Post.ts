@@ -19,4 +19,5 @@ export interface PostDoc {
 export interface Comment {
   commentUsername?: string;
   content?: string;
+  createdAt?: Timestamp;
 }

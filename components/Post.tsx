@@ -4,7 +4,7 @@ import {
   HeartIcon as HeartIconSolid,
 } from "@heroicons/react/solid";
 import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Author, PostDoc } from "../types/Post";
 import { db } from "../utils/firebase";
@@ -60,6 +60,7 @@ const Post = ({ postDoc }: PostProps) => {
           {
             commentUsername: currentUser.username,
             content: comment,
+            createdAt: Timestamp.now(),
           },
         ];
 
@@ -99,11 +100,13 @@ const Post = ({ postDoc }: PostProps) => {
     <div className="max-w-md border border-gray-300">
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center space-x-4">
-          <Avatar
-            photoURL={author?.photoURL}
-            displayName={author?.displayName}
-            size={10}
-          />
+          <div className="h-10 w-10">
+            <Avatar
+              photoURL={author?.photoURL}
+              displayName={author?.displayName}
+              size={10}
+            />
+          </div>
           <p className="font-semibold">{author?.username}</p>
         </div>
         <button>
@@ -147,9 +150,11 @@ const Post = ({ postDoc }: PostProps) => {
               </button>
             )}
           </div>
-          <button className="my-2 text-sm text-gray-600 hover:text-gray-500">
-            View all {post?.comments.length} comments
-          </button>
+          {post?.comments.length > 0 && (
+            <button className="my-2 text-sm text-gray-600 hover:text-gray-500">
+              View all {post?.comments.length} comments
+            </button>
+          )}
           <p className="text-xs uppercase text-gray-500">
             {dayjs(date).fromNow()}
           </p>
