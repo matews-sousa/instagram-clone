@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Avatar from "./Avatar";
 import EmojiPicker from "./EmojiPicker";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -107,7 +108,9 @@ const Post = ({ postDoc }: PostProps) => {
               size={10}
             />
           </div>
-          <p className="font-semibold">{author?.username}</p>
+          <Link href={`/${author?.username}`}>
+            <a className="font-semibold">{author?.username}</a>
+          </Link>
         </div>
         <button>
           <DotsHorizontalIcon className="w-6 text-black" />
@@ -116,13 +119,15 @@ const Post = ({ postDoc }: PostProps) => {
       <img src={post?.imageUrl} className="w-full" />
       <div className="p-2">
         <div className="space-x-2">
-          <button onClick={toggleLike} className="group">
-            {currentUser && post?.likes.includes(currentUser?.uid) ? (
-              <HeartIconSolid className="h-8 w-8 text-red-600" />
-            ) : (
-              <HeartIcon className="h-8 w-8 group-hover:text-red-600" />
-            )}
-          </button>
+          <label className="swap">
+            <input
+              type="checkbox"
+              onChange={toggleLike}
+              checked={post.likes.includes(currentUser?.uid)}
+            />
+            <HeartIconSolid className="swap-on h-8 w-8 text-red-600" />
+            <HeartIcon className="swap-off h-8 w-8 " />
+          </label>
           <button>
             <ChatIcon className="h-8 w-8" />
           </button>
@@ -167,7 +172,7 @@ const Post = ({ postDoc }: PostProps) => {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Add a comment..."
-          className="w-[80%] p-2 focus:outline-none"
+          className="input input-ghost input-sm w-[80%]"
         />
         <button
           className="text-sm font-semibold text-blue-600 hover:text-blue-500"

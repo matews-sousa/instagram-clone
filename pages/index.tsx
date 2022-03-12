@@ -2,7 +2,6 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import Navbar from "../components/Navbar";
 import Post from "../components/Post";
 import { PostDoc } from "../types/Post";
 import { db } from "../utils/firebase";
@@ -29,7 +28,6 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      <Navbar />
       <div className="space-y-6">
         {posts.map((post) => (
           <Post postDoc={post} key={post.id} />

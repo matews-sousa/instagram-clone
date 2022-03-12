@@ -31,7 +31,7 @@ const Navbar = () => {
         <div className="hidden md:block">
           <input
             type="text"
-            className="rounded-md border border-gray-500 bg-gray-100 py-1 px-2"
+            className="input input-bordered input-sm"
             placeholder="Search"
           />
         </div>

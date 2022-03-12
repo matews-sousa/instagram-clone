@@ -66,6 +66,7 @@ const CreatePostModal = ({ isOpen, setIsOpen }: CreatePostModal) => {
               caption: caption,
               imageUrl: url,
               likes: [],
+              comments: [],
               createdAt: Timestamp.now(),
             });
             setIsPublishing(false);
@@ -148,7 +149,7 @@ const CreatePostModal = ({ isOpen, setIsOpen }: CreatePostModal) => {
                         </div>
                         <textarea
                           placeholder="Write a caption..."
-                          className="mt-4 h-40 w-full p-1"
+                          className="textarea textarea-bordered mt-4 w-full"
                           onChange={(e) => setCaption(e.target.value)}
                         ></textarea>
                       </div>
@@ -156,12 +157,11 @@ const CreatePostModal = ({ isOpen, setIsOpen }: CreatePostModal) => {
                   ) : (
                     <div className="flex flex-col items-center justify-end gap-2">
                       <h3 className="text-3xl font-bold">Publishing...</h3>
-                      <div className="h-2.5 w-[90%] rounded-full bg-gray-400">
-                        <div
-                          className={`h-2.5 rounded-full bg-blue-500`}
-                          style={{ width: `${progress}%` }}
-                        ></div>
-                      </div>
+                      <progress
+                        className="progress progress-info w-64"
+                        value={progress}
+                        max="100"
+                      ></progress>
                       <p className="text-2xl font-semibold">{progress}%</p>
                     </div>
                   )

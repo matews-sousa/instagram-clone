@@ -8,20 +8,23 @@ const Avatar = ({
   size?: number;
 }) => {
   return (
-    <div className={`w-${size} h-${size}`}>
+    <>
       {photoURL ? (
-        <img
-          src={photoURL}
-          className={`h-full w-full rounded-full object-cover`}
-        />
+        <div className="avatar">
+          <div className={`w-${size} rounded-full`}>
+            <img src={photoURL} />
+          </div>
+        </div>
       ) : (
-        <div
-          className={`flex h-${size} w-${size} items-center justify-center rounded-full bg-blue-400 text-white`}
-        >
-          {displayName?.charAt(0).toUpperCase()}
+        <div className="avatar placeholder">
+          <div
+            className={`rounded-full bg-neutral-focus text-neutral-content w-${size}`}
+          >
+            <span>{displayName?.charAt(0).toUpperCase()}</span>
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

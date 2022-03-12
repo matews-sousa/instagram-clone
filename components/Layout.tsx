@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { ReactNode } from "react";
+import Navbar from "./Navbar";
 
 interface LayoutProps {
   title?: string;
@@ -15,6 +16,7 @@ const Layout = ({ title = "Instagram", children }: LayoutProps) => {
       </Head>
 
       <div className="mx-auto max-w-xl px-4 py-32 md:max-w-3xl lg:max-w-4xl">
+        <Navbar />
         {children}
       </div>
     </div>

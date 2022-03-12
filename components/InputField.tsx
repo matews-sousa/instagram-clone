@@ -1,12 +1,12 @@
 const InputField = ({ label, name, register, error, ...props }: any) => {
   return (
-    <div className="my-1 flex flex-col">
-      <label htmlFor={name} className="text-sm">
-        {label}
+    <div className="flex flex-col">
+      <label htmlFor={name} className="label">
+        <span className="label-text">{label}</span>
       </label>
       <input
         id={name}
-        className="border border-gray-300 p-1 outline-none focus:border-gray-500"
+        className="input input-bordered input-sm"
         {...register(name)}
         {...props}
       />

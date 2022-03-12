@@ -35,7 +35,7 @@ const ProfileDropdown = () => {
             >
               <Menu.Item>
                 {({ active }) => (
-                  <Link href="/profile">
+                  <Link href={`${currentUser?.username}`}>
                     <a
                       className={`${
                         active && "bg-gray-100"

@@ -19,6 +19,8 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 interface IUser extends User {
   username?: string;
   photoURL: string | null;
+  following: string[];
+  followers: string[];
 }
 
 interface IAuth {
@@ -68,6 +70,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         username: username,
         displayName: auth.currentUser.displayName,
         photoURL: auth.currentUser.photoURL,
+        following: [],
+        followers: [],
+      });
+
+      setCurrentUser({
+        ...user,
+        username: username,
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+        following: [],
+        followers: [],
       });
     }
   };
@@ -85,8 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setCurrentUser({
           ...user,
-          username: data?.username,
-          photoURL: data?.photoURL,
+          ...data,
         });
       } else {
         setCurrentUser(null);
