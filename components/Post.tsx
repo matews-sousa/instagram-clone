@@ -14,6 +14,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import Avatar from "./Avatar";
 import EmojiPicker from "./EmojiPicker";
 import Link from "next/link";
+import ReactHashtag from "react-hashtag";
 
 dayjs.extend(relativeTime);
 
@@ -24,7 +25,6 @@ interface PostProps {
 const Post = ({ postDoc }: PostProps) => {
   const [post, setPost] = useState<PostDoc>(postDoc);
   const [author, setAuthor] = useState<Author>();
-  const [showMore, setShowMore] = useState(false);
   const [comment, setComment] = useState("");
   const { currentUser } = useAuth();
   const date = post?.createdAt.toDate();
@@ -98,7 +98,7 @@ const Post = ({ postDoc }: PostProps) => {
   }
 
   return (
-    <div className="max-w-md border border-gray-300">
+    <div className="w-full border border-gray-300">
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center space-x-4">
           <div className="h-10 w-10">
@@ -140,20 +140,14 @@ const Post = ({ postDoc }: PostProps) => {
           <div className="flex">
             <p className="w-[90%] whitespace-pre-wrap">
               <span className="mr-2 font-semibold">{author?.username}</span>
-              {post?.caption.slice(
-                0,
-                !showMore ? 50 : post?.caption.length + 1,
-              )}
-              {post?.caption.length >= 50 && !showMore && "..."}
-            </p>
-            {post?.caption.length >= 50 && !showMore && (
-              <button
-                className="text-sm text-gray-500"
-                onClick={() => setShowMore(true)}
+              <ReactHashtag
+                renderHashtag={(hashtagvalue: string) => (
+                  <a className="cursor-pointer text-blue-500">{hashtagvalue}</a>
+                )}
               >
-                more
-              </button>
-            )}
+                {post?.caption}
+              </ReactHashtag>
+            </p>
           </div>
           {post?.comments.length > 0 && (
             <button className="my-2 text-sm text-gray-600 hover:text-gray-500">
@@ -172,7 +166,7 @@ const Post = ({ postDoc }: PostProps) => {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Add a comment..."
-          className="input input-ghost input-sm w-[80%]"
+          className="input input-ghost input-sm w-[90%] placeholder-gray-700"
         />
         <button
           className="text-sm font-semibold text-blue-600 hover:text-blue-500"

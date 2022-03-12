@@ -63,6 +63,12 @@ const Profile = () => {
         <Loader />
       </Layout>
     );
+  } else if (!profileUser) {
+    return (
+      <Layout>
+        <h1 className="text-center text-4xl font-semibold">User not found</h1>
+      </Layout>
+    );
   }
 
   return (
@@ -79,7 +85,7 @@ const Profile = () => {
             ) : (
               <div className="avatar placeholder">
                 <div className="w-24 rounded-full bg-neutral-focus text-neutral-content md:w-36">
-                  <span>
+                  <span className="text-3xl">
                     {profileUser?.displayName.charAt(0).toUpperCase()}
                   </span>
                 </div>
