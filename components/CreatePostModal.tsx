@@ -180,7 +180,7 @@ const CreatePostModal = ({ isOpen, setIsOpen }: CreatePostModal) => {
                       </p>
                       <label
                         htmlFor="fileInput"
-                        className="w-48 cursor-pointer rounded-md bg-blue-500 p-2 text-sm font-semibold text-white"
+                        className="btn btn-info btn-sm"
                       >
                         Select from your computer
                       </label>

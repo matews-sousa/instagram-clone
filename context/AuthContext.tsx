@@ -11,20 +11,13 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  User,
   updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-
-interface IUser extends User {
-  username?: string;
-  photoURL: string | null;
-  following: string[];
-  followers: string[];
-}
+import { CurrentUser } from "../types/User";
 
 interface IAuth {
-  currentUser: IUser | null;
+  currentUser: CurrentUser | null;
   signIn: (email: string, password: string) => any;
   signUp: (
     displayName: string,
@@ -42,7 +35,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   const signIn = (email: string, password: string) => {
