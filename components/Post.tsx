@@ -14,7 +14,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import Avatar from "./Avatar";
 import EmojiPicker from "./EmojiPicker";
 import Link from "next/link";
-import ReactHashtag from "react-hashtag";
 
 dayjs.extend(relativeTime);
 
@@ -93,10 +92,6 @@ const Post = ({ postDoc }: PostProps) => {
     fetchAuthorData();
   }, [postDoc]);
 
-  if (!post) {
-    return <div>Nothing here</div>;
-  }
-
   return (
     <div className="w-full border border-gray-300">
       <div className="flex items-center justify-between p-2">
@@ -140,13 +135,7 @@ const Post = ({ postDoc }: PostProps) => {
           <div className="flex">
             <p className="w-[90%] whitespace-pre-wrap">
               <span className="mr-2 font-semibold">{author?.username}</span>
-              <ReactHashtag
-                renderHashtag={(hashtagvalue: string) => (
-                  <a className="cursor-pointer text-blue-500">{hashtagvalue}</a>
-                )}
-              >
-                {post?.caption}
-              </ReactHashtag>
+              {post?.caption}
             </p>
           </div>
           {post?.comments.length > 0 && (
@@ -154,6 +143,20 @@ const Post = ({ postDoc }: PostProps) => {
               View all {post?.comments.length} comments
             </button>
           )}
+          <div>
+            {post?.comments.map((comment) => (
+              <div className="my-2">
+                <p>
+                  <Link href={`/${comment.commentUsername}`}>
+                    <a className="mr-2 font-semibold">
+                      {comment.commentUsername}
+                    </a>
+                  </Link>
+                  {comment.content}
+                </p>
+              </div>
+            ))}
+          </div>
           <p className="text-xs uppercase text-gray-500">
             {dayjs(date).fromNow()}
           </p>

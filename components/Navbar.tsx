@@ -1,16 +1,12 @@
 import Link from "next/link";
-import {
-  ChatIcon,
-  HeartIcon,
-  HomeIcon,
-  PlusCircleIcon,
-} from "@heroicons/react/solid";
+import { HomeIcon, PlusCircleIcon } from "@heroicons/react/solid";
 import {
   ChatIcon as ChatOutline,
   HeartIcon as HeartOutline,
   HomeIcon as HomeOutline,
   PlusCircleIcon as PlusCircleOutline,
 } from "@heroicons/react/outline";
+import { MdExplore, MdOutlineExplore } from "react-icons/md";
 import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
@@ -68,5 +64,11 @@ const navLinks = [
     name: "Home",
     iconActive: <HomeIcon className="h-7 w-7 text-black" />,
     icon: <HomeOutline className="h-7 w-7 text-black" />,
+  },
+  {
+    url: "/explore",
+    name: "Explose",
+    iconActive: <MdExplore className="h-7 w-7 text-black" />,
+    icon: <MdOutlineExplore className="h-7 w-7 text-black" />,
   },
 ];
