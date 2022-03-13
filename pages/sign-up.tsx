@@ -1,13 +1,12 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthContext";
-import { db } from "../utils/firebase";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputField from "../components/InputField";
 import { useEffect, useState } from "react";
+import usernameAlreadyInUse from "../utils/usernameAlreadyInUse";
 
 type FormInputs = {
   email: string;
@@ -24,12 +23,8 @@ const schema = yup.object({
   name: yup.string().required("Name is a required field."),
   username: yup
     .string()
-    .test("in-use", "Username already in use.", async (value) => {
-      const usersRef = collection(db, "users");
-      const q = query(usersRef, where("username", "==", value));
-      const querySnapshot = await getDocs(q);
-
-      return querySnapshot.empty;
+    .test("in-use", "Username already in use.", (value) => {
+      return usernameAlreadyInUse(value);
     })
     .required("Username is a required field."),
   password: yup

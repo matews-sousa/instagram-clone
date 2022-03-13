@@ -1,100 +1,82 @@
-import { updateProfile } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { updateProfile } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../utils/firebase";
+import { useAuth } from "../context/AuthContext";
+import usernameAlreadyInUse from "../utils/usernameAlreadyInUse";
+import useFileUpload from "../hooks/useFileUpload";
+import useImageSelection from "../hooks/useImageSelection";
 import Avatar from "../components/Avatar";
 import InputField from "../components/InputField";
 import Layout from "../components/Layout";
 import UpdateProfilePicModal from "../components/UpdateProfilePicModal";
-import { useAuth } from "../context/AuthContext";
-import { auth, db, storage } from "../utils/firebase";
 
-interface FormData {
-  name: string;
-  username: string;
+interface FormInputs {
+  name?: string | null;
+  username?: string | null;
 }
 
-// ADD VALIDATION TO USERNAME IF IS ALREADY IN USE
+const schema = yup.object({
+  name: yup.string().required("Name is a required field."),
+  username: yup
+    .string()
+    .test("in-use", "Username already in use.", (value) => {
+      return usernameAlreadyInUse(value);
+    })
+    .required("Username is a required field."),
+});
 
 const Edit = () => {
   const { currentUser, setCurrentUser } = useAuth();
-  const defaultValues = {
+  const defaultValues: FormInputs = {
     name: currentUser?.displayName,
     username: currentUser?.username,
   };
-  const { register, handleSubmit, reset } = useForm({ defaultValues });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormInputs>({
+    defaultValues,
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+  });
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [editProfileIsOpen, setEditProfileIsOpen] = useState(false);
-  const [file, setFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(currentUser?.photoURL);
+  const { upload, isUploading, progress } = useFileUpload();
+  const { selectImage, file, imagePreview, setImagePreview, setFile } =
+    useImageSelection(currentUser?.photoURL);
 
-  const selectImage = async (e: any) => {
-    const f = e.target?.files[0];
-    if (f) {
-      setFile(f);
-      const base64: any = await convertBase64(f);
-      setImagePreview(base64);
-    }
-  };
-
-  const convertBase64 = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const updateImage = () => {
-    if (currentUser && file) {
-      const storageRef = ref(storage, `/posts/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          setIsUpdating(true);
-          const prog = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-          );
-          setProgress(prog);
-        },
-        (err) => console.log(err),
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-            updateProfile(auth.currentUser, {
+  const updateImage = async () => {
+    if (file) {
+      await upload(file, "avatars", (url) => {
+        if (currentUser && auth.currentUser) {
+          updateProfile(auth.currentUser, {
+            photoURL: url,
+          }).then(async () => {
+            const userRef = doc(db, "users", currentUser.uid);
+            const userDocUpdated = {
               photoURL: url,
-            }).then(async () => {
-              const userRef = doc(db, "users", currentUser.uid);
-              const userDocUpdated = {
-                photoURL: url,
-              };
-              await updateDoc(userRef, userDocUpdated);
-              setCurrentUser({
-                ...currentUser,
-                ...userDocUpdated,
-              });
-              setIsUpdating(false);
-              setProgress(0);
+            };
+            await updateDoc(userRef, userDocUpdated);
+            setCurrentUser({
+              ...currentUser,
+              ...userDocUpdated,
             });
           });
-        },
-      );
+        }
+      });
     }
   };
 
   const removeImage = () => {
-    if (currentUser && imagePreview && !isUpdating) {
-      setIsUpdating(true);
-      setImagePreview("");
+    if (auth.currentUser && currentUser && imagePreview) {
       updateProfile(auth.currentUser, {
         photoURL: null,
       }).then(async () => {
@@ -107,18 +89,15 @@ const Edit = () => {
           ...currentUser,
           ...userDocUpdated,
         });
-        setIsUpdating(false);
         setImagePreview("");
         setFile(null);
       });
     }
   };
 
-  const onSubmit = async (data: FormData) => {
-    console.log(data);
-
+  const onSubmit = async (data: FormInputs) => {
     setIsSubmiting(true);
-    if (auth.currentUser && data.name && data.username) {
+    if (auth.currentUser && data.name && data.username && currentUser) {
       updateProfile(auth.currentUser, {
         displayName: data.name,
       })
@@ -138,6 +117,12 @@ const Edit = () => {
         .catch((error) => console.log(error));
     }
   };
+
+  // remove spaces from username
+  const username = watch("username");
+  useEffect(() => {
+    if (username) setValue("username", username.trim());
+  }, [username]);
 
   useEffect(() => {
     reset();
@@ -163,8 +148,18 @@ const Edit = () => {
           </div>
         </div>
         <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
-          <InputField label="Name" name="name" register={register} />
-          <InputField label="Username" name="username" register={register} />
+          <InputField
+            label="Name"
+            name="name"
+            register={register}
+            error={errors.name?.message}
+          />
+          <InputField
+            label="Username"
+            name="username"
+            register={register}
+            error={errors.username?.message}
+          />
           <button
             disabled={isSubmiting}
             className={`btn btn-info mt-4 text-white ${
@@ -182,7 +177,7 @@ const Edit = () => {
         imagePreview={imagePreview}
         removeImage={removeImage}
         updateImage={updateImage}
-        isUpdating={isUpdating}
+        isUpdating={isUploading}
         progress={progress}
       />
     </Layout>
