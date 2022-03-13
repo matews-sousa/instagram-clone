@@ -118,7 +118,7 @@ const Post = ({ postDoc }: PostProps) => {
             <input
               type="checkbox"
               onChange={toggleLike}
-              checked={post.likes.includes(currentUser?.uid)}
+              checked={post.likes.includes(currentUser!.uid)}
             />
             <HeartIconSolid className="swap-on h-8 w-8 text-red-600" />
             <HeartIcon className="swap-off h-8 w-8 " />
@@ -144,7 +144,7 @@ const Post = ({ postDoc }: PostProps) => {
             </button>
           )}
           <div>
-            {post?.comments.map((comment) => (
+            {post?.comments.slice(0, 2).map((comment) => (
               <div className="my-2">
                 <p>
                   <Link href={`/${comment.commentUsername}`}>

@@ -22,7 +22,7 @@ const UserCard = ({ user }: { user: ProfileUser }) => {
         <Avatar
           photoURL={profileUser?.photoURL}
           displayName={profileUser?.displayName}
-          size={12}
+          size={10}
         />
         <Link href={`/${profileUser?.username}`}>
           <a>{profileUser?.username}</a>
