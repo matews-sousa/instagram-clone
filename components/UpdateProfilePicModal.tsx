@@ -1,10 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import { ChangeEvent, Fragment } from "react";
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
-  onChange: (e: any) => void;
+  onChange: (e: ChangeEvent) => void;
   imagePreview: string | null | undefined;
   removeImage: () => void;
   updateImage: () => void;

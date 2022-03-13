@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
-const useImageSelection = (defaultImagePreview: string | null | undefined) => {
+const useImageSelection = (defaultImagePreview?: string | null | undefined) => {
   const [file, setFile] = useState<File | null>();
   const [imagePreview, setImagePreview] = useState<string | undefined | null>(
     defaultImagePreview,
@@ -20,7 +20,7 @@ const useImageSelection = (defaultImagePreview: string | null | undefined) => {
     });
   };
 
-  const selectImage = async (e: Event) => {
+  const selectImage = async (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
     const f: File = (target.files as FileList)[0];
     if (f) {
