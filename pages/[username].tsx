@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Loader from "../components/Loader";
 import toggleFollow from "../utils/toggleFollow";
 import { ProfileUser } from "../types/User";
+import Link from "next/link";
 
 const Profile = () => {
   const [profileUser, setProfileUser] = useState<ProfileUser>();
@@ -97,7 +98,9 @@ const Profile = () => {
             <div className="hidden items-end space-x-6 md:flex">
               <h2 className="text-3xl">{profileUser?.username}</h2>
               {currentUser?.uid === profileUser?.id ? (
-                <button className="btn btn-outline btn-sm">Edit Profile</button>
+                <Link href="/edit">
+                  <a className="btn btn-outline btn-sm">Edit Profile</a>
+                </Link>
               ) : (
                 <button
                   className="btn btn-info btn-sm text-white"
@@ -121,9 +124,11 @@ const Profile = () => {
           </div>
         </div>
         {currentUser?.uid === profileUser?.id ? (
-          <button className="btn btn-outline btn-sm w-full md:hidden">
-            Edit Profile
-          </button>
+          <Link href="/edit">
+            <a className="btn btn-outline btn-sm w-full md:hidden">
+              Edit Profile
+            </a>
+          </Link>
         ) : (
           <button
             className="btn btn-info btn-sm w-full text-white md:hidden"

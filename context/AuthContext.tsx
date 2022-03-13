@@ -26,6 +26,7 @@ interface IAuth {
     password: string,
   ) => any;
   logout: () => void;
+  setCurrentUser: (user: CurrentUser) => void;
 }
 
 const AuthContext = createContext<IAuth>({} as IAuth);
@@ -110,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signUp,
     logout,
+    setCurrentUser,
   };
 
   return (
