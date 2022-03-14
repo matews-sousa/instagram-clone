@@ -74,7 +74,7 @@ const CreatePostModal = ({ isOpen, setIsOpen }: CreatePostModal) => {
                 className="flex items-center justify-between border-b border-gray-400 px-6 pb-4 text-lg font-medium leading-6 text-gray-900"
               >
                 <button
-                  disabled={imagePreview === ""}
+                  disabled={!imagePreview}
                   className="flex items-center text-sm font-semibold text-blue-500 disabled:cursor-default disabled:text-gray-500"
                   onClick={() => setImagePreview("")}
                 >
@@ -83,7 +83,7 @@ const CreatePostModal = ({ isOpen, setIsOpen }: CreatePostModal) => {
                 </button>
                 <p className="flex-1 text-center">Create new post</p>
                 <button
-                  disabled={imagePreview === ""}
+                  disabled={!imagePreview}
                   className="text-sm font-semibold text-blue-500 disabled:cursor-default disabled:text-gray-500"
                   onClick={publish}
                 >

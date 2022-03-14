@@ -12,12 +12,12 @@ export interface PostDoc {
   imageUrl: string;
   caption: string;
   likes: string[];
-  comments: Comment[];
+  comments: CommentDoc[];
   createdAt: Timestamp;
 }
 
-export interface Comment {
-  commentUsername?: string;
-  content?: string;
-  createdAt?: Timestamp;
+export interface CommentDoc {
+  authorId: string;
+  content: string;
+  createdAt: Timestamp;
 }

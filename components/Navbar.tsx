@@ -1,12 +1,8 @@
 import Link from "next/link";
-import { HomeIcon, PlusCircleIcon } from "@heroicons/react/solid";
-import {
-  ChatIcon as ChatOutline,
-  HeartIcon as HeartOutline,
-  HomeIcon as HomeOutline,
-  PlusCircleIcon as PlusCircleOutline,
-} from "@heroicons/react/outline";
+import { HomeIcon } from "@heroicons/react/solid";
+import { HomeIcon as HomeOutline } from "@heroicons/react/outline";
 import { MdExplore, MdOutlineExplore } from "react-icons/md";
+import { FiPlusSquare } from "react-icons/fi";
 import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
@@ -43,7 +39,7 @@ const Navbar = () => {
               </li>
             ))}
             <li className="cursor-pointer" onClick={() => setIsOpen(true)}>
-              <PlusCircleOutline className="h-7 w-7" />
+              <FiPlusSquare className="h-7 w-7" />
             </li>
             <li>
               <ProfileDropdown />

@@ -1,19 +1,19 @@
+import { useEffect, useState } from "react";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import { db } from "../utils/firebase";
+import { useAuth } from "../context/AuthContext";
 import {
   DotsHorizontalIcon,
   ShareIcon,
   HeartIcon as HeartIconSolid,
 } from "@heroicons/react/solid";
-import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
-import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { Author, PostDoc } from "../types/Post";
-import { db } from "../utils/firebase";
-import { useAuth } from "../context/AuthContext";
+import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
+import { Author, CommentDoc, PostDoc } from "../types/Post";
 import Avatar from "./Avatar";
 import EmojiPicker from "./EmojiPicker";
-import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -21,9 +21,14 @@ interface PostProps {
   postDoc: PostDoc;
 }
 
+interface Comment extends CommentDoc {
+  username: string;
+}
+
 const Post = ({ postDoc }: PostProps) => {
   const [post, setPost] = useState<PostDoc>(postDoc);
   const [author, setAuthor] = useState<Author>();
+  const [comments, setComments] = useState<Comment[]>();
   const [comment, setComment] = useState("");
   const { currentUser } = useAuth();
   const date = post?.createdAt.toDate();
@@ -58,7 +63,7 @@ const Post = ({ postDoc }: PostProps) => {
         const newComments = [
           ...post.comments,
           {
-            commentUsername: currentUser.username,
+            authorId: currentUser.uid,
             content: comment,
             createdAt: Timestamp.now(),
           },
@@ -88,8 +93,24 @@ const Post = ({ postDoc }: PostProps) => {
     setAuthor(finalAuthor);
   };
 
+  const fetchCommentsWithAuthorsData = async () => {
+    const promisesWithData = postDoc.comments?.map(async (comment) => {
+      const authorRef = doc(db, "users", comment.authorId);
+      const authorDocSnap = await getDoc(authorRef);
+      const authorData = authorDocSnap.data();
+
+      return {
+        ...comment,
+        username: authorData?.username,
+      };
+    });
+    const commentsWithData = await Promise.all(promisesWithData);
+    setComments(commentsWithData);
+  };
+
   useEffect(() => {
     fetchAuthorData();
+    fetchCommentsWithAuthorsData();
   }, [postDoc]);
 
   return (
@@ -138,24 +159,23 @@ const Post = ({ postDoc }: PostProps) => {
               {post?.caption}
             </p>
           </div>
-          {post?.comments.length > 0 && (
+          {comments && comments?.length > 0 && (
             <button className="my-2 text-sm text-gray-600 hover:text-gray-500">
-              View all {post?.comments.length} comments
+              View all {comments?.length} comments
             </button>
           )}
           <div>
-            {post?.comments.slice(0, 2).map((comment) => (
-              <div className="my-2">
-                <p>
-                  <Link href={`/${comment.commentUsername}`}>
-                    <a className="mr-2 font-semibold">
-                      {comment.commentUsername}
-                    </a>
-                  </Link>
-                  {comment.content}
-                </p>
-              </div>
-            ))}
+            {comments &&
+              comments?.map((comment) => (
+                <div className="my-2">
+                  <p>
+                    <Link href={`/${comment.username}`}>
+                      <a className="mr-2 font-semibold">{comment.username}</a>
+                    </Link>
+                    {comment.content}
+                  </p>
+                </div>
+              ))}
           </div>
           <p className="text-xs uppercase text-gray-500">
             {dayjs(date).fromNow()}
