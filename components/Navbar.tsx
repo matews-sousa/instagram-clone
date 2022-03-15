@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
 import CreatePostModal from "./CreatePostModal";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const router = useRouter();
@@ -21,11 +22,7 @@ const Navbar = () => {
           </a>
         </Link>
         <div className="hidden md:block">
-          <input
-            type="text"
-            className="input input-bordered input-sm"
-            placeholder="Search"
-          />
+          <SearchBar />
         </div>
         <nav>
           <ul className="flex items-center space-x-4">
