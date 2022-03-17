@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         const docRef = doc(db, "users", user?.uid);
         const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
+        const data = docSnap.data() as CurrentUser;
 
         setCurrentUser({
           ...user,

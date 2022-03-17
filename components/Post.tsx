@@ -165,17 +165,16 @@ const Post = ({ postDoc }: PostProps) => {
             </button>
           )}
           <div>
-            {comments &&
-              comments?.map((comment) => (
-                <div className="my-2">
-                  <p>
-                    <Link href={`/${comment.username}`}>
-                      <a className="mr-2 font-semibold">{comment.username}</a>
-                    </Link>
-                    {comment.content}
-                  </p>
-                </div>
-              ))}
+            {comments?.slice(0, 2).map((comment) => (
+              <div className="my-2" key={comment.content}>
+                <p>
+                  <Link href={`/${comment.username}`}>
+                    <a className="mr-2 font-semibold">{comment.username}</a>
+                  </Link>
+                  {comment.content}
+                </p>
+              </div>
+            ))}
           </div>
           <p className="text-xs uppercase text-gray-500">
             {dayjs(date).fromNow()}

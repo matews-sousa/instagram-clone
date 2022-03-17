@@ -25,16 +25,18 @@ const Home: NextPage = () => {
   const fetchUsers = async () => {
     const q = query(collection(db, "users"));
     const querySnapshot = await getDocs(q);
-    const currentUsers: any = [];
+    const currentUsers: ProfileUser[] = [];
     querySnapshot.forEach((doc) => {
       // remove the current user
+      const userData = doc.data() as ProfileUser;
       if (
         doc.id !== currentUser?.uid &&
-        !doc.data().followers.includes(currentUser?.uid)
+        currentUser &&
+        !userData.followers.includes(currentUser?.uid)
       ) {
         currentUsers.push({
+          ...userData,
           id: doc.id,
-          ...doc.data(),
         });
       }
     });
@@ -44,14 +46,14 @@ const Home: NextPage = () => {
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
-      const currentPosts: any = [];
+      const currentPosts: PostDoc[] = [];
       querySnapshot.forEach((doc) => {
-        const postData = doc.data();
+        const postData = doc.data() as PostDoc;
         // check if currentUser follows the author of the post
         if (currentUser?.following.includes(postData.authorId)) {
           currentPosts.push({
-            id: doc.id,
             ...postData,
+            id: doc.id,
           });
         }
       });
