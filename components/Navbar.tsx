@@ -2,6 +2,11 @@ import Link from "next/link";
 import { HomeIcon } from "@heroicons/react/solid";
 import { HomeIcon as HomeOutline } from "@heroicons/react/outline";
 import { MdExplore, MdOutlineExplore } from "react-icons/md";
+import {
+  IoChatbubbleOutline,
+  IoChatbubble,
+  IoChatbubblesOutline,
+} from "react-icons/io5";
 import { FiPlusSquare } from "react-icons/fi";
 import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";
@@ -63,5 +68,11 @@ const navLinks = [
     name: "Explose",
     iconActive: <MdExplore className="h-7 w-7 text-black" />,
     icon: <MdOutlineExplore className="h-7 w-7 text-black" />,
+  },
+  {
+    url: "/messenger",
+    name: "Messenger",
+    iconActive: <IoChatbubble className="h-7 w-7 text-black" />,
+    icon: <IoChatbubbleOutline className="h-7 w-7 text-black" />,
   },
 ];
