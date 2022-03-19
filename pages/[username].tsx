@@ -9,6 +9,7 @@ import Loader from "../components/Loader";
 import toggleFollow from "../utils/toggleFollow";
 import { ProfileUser } from "../types/User";
 import Link from "next/link";
+import Image from "next/image";
 
 const Profile = () => {
   const [profileUser, setProfileUser] = useState<ProfileUser>();
@@ -79,8 +80,12 @@ const Profile = () => {
           <div className="flex flex-col items-center">
             {profileUser?.photoURL ? (
               <div className="avatar">
-                <div className="w-24 rounded-full md:w-36">
-                  <img src={profileUser?.photoURL} />
+                <div className="relative w-24 md:w-36">
+                  <Image
+                    src={profileUser?.photoURL}
+                    layout="fill"
+                    className="rounded-full"
+                  />
                 </div>
               </div>
             ) : (
@@ -142,7 +147,7 @@ const Profile = () => {
       </div>
       <section className="mt-12 grid grid-cols-3 gap-1 sm:gap-4">
         {profileUser?.posts.map((post) => (
-          <ProfilePost post={post} />
+          <ProfilePost post={post} key={post.id} />
         ))}
       </section>
     </Layout>

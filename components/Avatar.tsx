@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Avatar = ({
   photoURL,
   displayName,
@@ -11,8 +13,8 @@ const Avatar = ({
     <>
       {photoURL ? (
         <div className="avatar">
-          <div className={`w-${size} rounded-full`}>
-            <img src={photoURL} />
+          <div className={`w-${size} relative`}>
+            <Image src={photoURL} layout="fill" className="rounded-full" />
           </div>
         </div>
       ) : (

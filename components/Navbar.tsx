@@ -2,11 +2,7 @@ import Link from "next/link";
 import { HomeIcon } from "@heroicons/react/solid";
 import { HomeIcon as HomeOutline } from "@heroicons/react/outline";
 import { MdExplore, MdOutlineExplore } from "react-icons/md";
-import {
-  IoChatbubbleOutline,
-  IoChatbubble,
-  IoChatbubblesOutline,
-} from "react-icons/io5";
+import { IoChatbubbleOutline, IoChatbubble } from "react-icons/io5";
 import { FiPlusSquare } from "react-icons/fi";
 import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";

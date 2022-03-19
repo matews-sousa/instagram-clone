@@ -8,6 +8,7 @@ import {
   HeartIcon as HeartIconSolid,
 } from "@heroicons/react/solid";
 import Link from "next/link";
+import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
@@ -132,7 +133,16 @@ const Post = ({ postDoc }: PostProps) => {
           <DotsHorizontalIcon className="w-6 text-black" />
         </button>
       </div>
-      <img src={post?.imageUrl} className="w-full" />
+      <div className="relative w-full">
+        <Image
+          src={post?.imageUrl}
+          layout="responsive"
+          objectFit="cover"
+          height={200}
+          width={200}
+          priority
+        />
+      </div>
       <div className="p-2">
         <div className="space-x-2">
           <label className="swap">
