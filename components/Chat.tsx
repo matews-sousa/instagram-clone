@@ -67,21 +67,25 @@ const Chat = ({ userSelected }: ChatProps) => {
       where("users", "array-contains", userSelected.id),
     );
     const unsub = onSnapshot(q, async (querySnapshot) => {
-      const chatData = querySnapshot.docs[0].data() as ChatDoc;
-      if (chatData && chatData.messages.length > 0) {
-        const finalMessages = chatData.messages.map(async (message) => {
-          const authorData = await getUserData(message.authorId);
-          return {
-            ...message,
-            photoURL: authorData?.photoURL,
-            displayName: authorData?.displayName,
-          };
-        });
-        const msgs = await Promise.all(finalMessages);
-        setMessages(msgs);
-        chatBottom!.current!.scrollIntoView({ behavior: "smooth" });
+      if (querySnapshot.docs.length > 0) {
+        const chatData = querySnapshot.docs[0].data() as ChatDoc;
+        if (chatData && chatData.messages.length > 0) {
+          const finalMessages = chatData.messages.map(async (message) => {
+            const authorData = await getUserData(message.authorId);
+            return {
+              ...message,
+              photoURL: authorData?.photoURL,
+              displayName: authorData?.displayName,
+            };
+          });
+          const msgs = await Promise.all(finalMessages);
+          setMessages(msgs);
+          chatBottom!.current!.scrollIntoView({ behavior: "smooth" });
+        } else {
+          setCurrentChatId("");
+          setMessages([]);
+        }
       } else {
-        setCurrentChatId("");
         setMessages([]);
       }
     });
