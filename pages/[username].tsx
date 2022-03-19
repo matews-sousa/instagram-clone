@@ -6,23 +6,21 @@ import { useAuth } from "../context/AuthContext";
 import ProfilePost from "../components/ProfilePost";
 import { useRouter } from "next/router";
 import Loader from "../components/Loader";
-import toggleFollow from "../utils/toggleFollow";
 import { ProfileUser } from "../types/User";
 import Link from "next/link";
 import Image from "next/image";
+import useFollow from "../hooks/useFollow";
 
 const Profile = () => {
   const [profileUser, setProfileUser] = useState<ProfileUser>();
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
+  const { toggleFollow } = useFollow();
   const router = useRouter();
   const { username } = router.query;
 
   const followUnfollow = () => {
-    if (currentUser && profileUser) {
-      const updated = toggleFollow(currentUser, profileUser);
-      setProfileUser(updated);
-    }
+    if (profileUser) toggleFollow(profileUser, setProfileUser);
   };
 
   const fetchProfileUser = async () => {

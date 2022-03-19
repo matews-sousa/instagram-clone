@@ -1,19 +1,17 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import useFollow from "../hooks/useFollow";
 import { ProfileUser } from "../types/User";
-import toggleFollow from "../utils/toggleFollow";
 import Avatar from "./Avatar";
 
 const UserCard = ({ user }: { user: ProfileUser }) => {
   const { currentUser } = useAuth();
+  const { toggleFollow } = useFollow();
   const [profileUser, setProfileUser] = useState<ProfileUser>(user);
 
   const followUnfollow = () => {
-    if (currentUser && profileUser) {
-      const updated = toggleFollow(currentUser, profileUser);
-      setProfileUser(updated);
-    }
+    if (profileUser) toggleFollow(profileUser, setProfileUser);
   };
 
   return (

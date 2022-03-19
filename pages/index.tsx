@@ -62,7 +62,7 @@ const Home: NextPage = () => {
     fetchUsers();
 
     return unsub;
-  }, []);
+  }, [currentUser]);
 
   return (
     <Layout>
