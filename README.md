@@ -1,27 +1,72 @@
-# Next.js + Tailwind CSS Example
+# Instagram Clone
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+A Instagram clone made with Next.js, Firebase and Tailwind CSS. This project was made for learning Firebase Authentication, Firestore and Cloud Storage, along with Next.js, Typescript and Tailwind CSS.
 
-## Preview
+### View the project live at https://instagram-clone-lovat-psi.vercel.app
 
-Preview the example live on [StackBlitz](http://stackblitz.com/):
+## Demo users
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+You can Sign Up for your own account or Sign In with the following users to test the application
 
-## Deploy your own
+1. Loretta
+    - Email: lore_kohn@email.com
+    - Password: 123456
+2. Jacob Small
+    - Email: lore_kohn@email.com
+    - Password: 123456
+3. Fanny Luebke
+    - Email: fannyluebke@email.com
+    - Password: 123456
+4. Sprinkle
+    - Email: frank@email.com
+    - Password: 123456
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+## Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+- Sign Up and Sign In
+- View posts feed
+- Publish posts
+- Edit profile
+- Follow and unfollow users
+- Like and comment other user's post
 
-## How to use
+## Tech Stack
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+- [Next.js](https://nextjs.org)
+- [Typescript](https://www.typescriptlang.org)
+- [Firebase](https://firebase.google.com/?hl=en)
+- [Tailwind CSS](https://tailwindcss.com)
+
+## Run the project locally
 
 ```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-# or
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
+$ git clone https://github.com/matews-sousa/instagram-clone.git
+$ cd instagram-clone
+$ yarn
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+### Firebase Configuration
+
+Get an overview of Firebase, how to create a project, what kind of features Firebase offers, and how to navigate through the Firebase project dashboard in this [visual tutorial for Firebase](https://www.robinwieruch.de/firebase-tutorial/).
+
+- copy/paste your configuration from your Firebase project's dashboard into one of these files
+  - utils/firebase.ts
+  - .env.local
+
+The .env.local file could look like the following then:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCQrW1QPUNp1JSrWaEv9z1Bj0nGH7M8ey4
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=instagram-clone-demo-87dbf.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=instagram-clone-demo-87dbf
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=instagram-clone-demo-87dbf.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=188905001064
+NEXT_PUBLIC_FIREBASE_APP_ID=1:188905001064:web:033035c6e97118f8556bdd
+```
+
+1. Run ```yarn dev```
+2. Open http://localhost:3000
+
+- For the authentication to work you need to enable Email/Password on Authentication section.
+- For saving data you need to create database on Firestore Database section.
+- For storing files you need to Set up Cloud Storage on Storage section.
