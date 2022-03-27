@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ErrorInfo, useState } from "react";
+import { useState } from "react";
 import InputField from "../components/InputField";
 import { useAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";

@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { HomeIcon } from "@heroicons/react/solid";
-import { HomeIcon as HomeOutline } from "@heroicons/react/outline";
+import { AiFillHome, AiOutlineHome } from "react-icons/ai";
+import { CgAddR } from "react-icons/cg";
 import { MdExplore, MdOutlineExplore } from "react-icons/md";
-import { IoChatbubbleOutline, IoChatbubble } from "react-icons/io5";
-import { FiPlusSquare } from "react-icons/fi";
 import { useRouter } from "next/router";
 import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
@@ -37,7 +35,7 @@ const Navbar = () => {
               </li>
             ))}
             <li className="cursor-pointer" onClick={() => setIsOpen(true)}>
-              <FiPlusSquare className="h-7 w-7" />
+              <CgAddR className="h-7 w-7" aria-label="Create post" />
             </li>
             <li>
               <ProfileDropdown />
@@ -56,19 +54,17 @@ const navLinks = [
   {
     url: "/",
     name: "Home",
-    iconActive: <HomeIcon className="h-7 w-7 text-black" />,
-    icon: <HomeOutline className="h-7 w-7 text-black" />,
+    iconActive: <AiFillHome className="h-7 w-7 text-black" aria-label="Home" />,
+    icon: <AiOutlineHome className="h-7 w-7 text-black" aria-label="Home" />,
   },
   {
     url: "/explore",
     name: "Explose",
-    iconActive: <MdExplore className="h-7 w-7 text-black" />,
-    icon: <MdOutlineExplore className="h-7 w-7 text-black" />,
-  },
-  {
-    url: "/messenger",
-    name: "Messenger",
-    iconActive: <IoChatbubble className="h-7 w-7 text-black" />,
-    icon: <IoChatbubbleOutline className="h-7 w-7 text-black" />,
+    iconActive: (
+      <MdExplore className="h-7 w-7 text-black" aria-label="Explore" />
+    ),
+    icon: (
+      <MdOutlineExplore className="h-7 w-7 text-black" aria-label="Explore" />
+    ),
   },
 ];
